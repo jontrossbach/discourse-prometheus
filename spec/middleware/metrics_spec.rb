@@ -39,7 +39,7 @@ describe ::DiscoursePrometheus::Middleware::Metrics do
   end
 
   it "can proxy the dedicated port for private IP addresses" do
-    stub_request(:get, "http://localhost:#{GlobalSetting.prometheus_collector_port}/metrics").
+    stub_request(:get, "http://#{GlobalSetting.prometheus_collector_host}:#{GlobalSetting.prometheus_collector_port}/metrics").
       to_return(status: 200, body: "hello world", headers: {})
 
     addresses = %w[127.1.2.3 192.168.1.2 10.0.1.2 172.16.9.8 172.19.1.2 172.20.9.8 172.29.1.2 172.30.9.8 172.31.1.2]
@@ -55,7 +55,7 @@ describe ::DiscoursePrometheus::Middleware::Metrics do
 
   it "can proxy the dedicated port even with invalid regex" do
     global_setting :prometheus_trusted_ip_allowlist_regex, "unbalanced bracket["
-    stub_request(:get, "http://localhost:#{GlobalSetting.prometheus_collector_port}/metrics").
+    stub_request(:get, "http://#{GlobalSetting.prometheus_collector_host}::#{GlobalSetting.prometheus_collector_port}/metrics").
       to_return(status: 200, body: "hello world", headers: {})
 
     status, headers, body = middleware.call("PATH_INFO" => '/metrics', "REMOTE_ADDR" => '192.168.1.1')
@@ -68,7 +68,7 @@ describe ::DiscoursePrometheus::Middleware::Metrics do
 
   it "can proxy the dedicated port on trusted IP" do
     global_setting :prometheus_trusted_ip_allowlist_regex, "(200\.0)"
-    stub_request(:get, "http://localhost:#{GlobalSetting.prometheus_collector_port}/metrics").
+    stub_request(:get, "http://#{GlobalSetting.prometheus_collector_host}::#{GlobalSetting.prometheus_collector_port}/metrics").
       to_return(status: 200, body: "hello world", headers: {})
 
     status, headers, body = middleware.call("PATH_INFO" => '/metrics', "REMOTE_ADDR" => '200.0.0.1')

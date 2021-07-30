@@ -57,7 +57,7 @@ module DiscoursePrometheus
     end
 
     def metrics(env)
-      data = Net::HTTP.get(URI("http://localhost:#{GlobalSetting.prometheus_collector_port}/metrics"))
+      data = Net::HTTP.get(URI("http://#{GlobalSetting.prometheus_collector_host}:#{GlobalSetting.prometheus_collector_port}/metrics"))
       [200, {
          "Content-Type" => "text/plain; charset=utf-8",
          "Content-Length" => data.bytesize.to_s
