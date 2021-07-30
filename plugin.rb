@@ -30,7 +30,7 @@ require_relative("lib/global_reporter_demon")
 require_relative("lib/middleware/metrics")
 
 GlobalSetting.add_default :prometheus_collector_port, 9405
-GlobalSetting.add_default :prometheus_collector_host, localhost
+GlobalSetting.add_default :prometheus_collector_host, 127.0.0.1
 GlobalSetting.add_default :prometheus_trusted_ip_allowlist_regex, ''
 
 Rails.configuration.middleware.unshift DiscoursePrometheus::Middleware::Metrics
